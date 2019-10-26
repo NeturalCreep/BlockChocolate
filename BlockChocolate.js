@@ -261,7 +261,7 @@ function Sprite(bc,XY){
                 if(canvas==undefined||canvas==null){
                     console.log('[BC Engine Ver 1.0 ] Error Message: 绘制精灵静态图片出现问题， Canvas不合法！')
                 }else{
-                    DrawMainSprite(Bc,this,canvas,this.PIc);
+                    DrawSprite(Bc,this,canvas,this.PIc);
                 }
         } 
         
@@ -405,7 +405,7 @@ function DrawMap(Camera,XY,canvas,img){
         );
     
     }
-function DrawMainSprite(Camera,Sprite,canvas,img){
+function DrawSprite(Camera,Sprite,canvas,img){
     var ratio = Camera.TitleFormatHeight/img.height;
     // if(Sprite.RealMove){
     // canvas.getContext("2d").drawImage(
