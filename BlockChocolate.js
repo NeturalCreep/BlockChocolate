@@ -4,7 +4,7 @@
 var TitleWalkMax = 3;
 var Timer = 0;
 var TimerMax = 60;
-var FPS = 144;
+var FPS = 240;
 
 //引擎
 function BlockChocolateEngine(Canvas,width,height){
@@ -124,7 +124,11 @@ function Layer(IsMapBG,bc){
     }
     //删除该图层中精灵集合的 指定精灵
     this.DelSprite = function(Sprite){
-        this.Sprites.slice(this.Sprites.indexOf(Sprite),1);
+        for(var index = 0; index <this.Sprites.length;index++){
+            if(Sprite.Name==this.Sprites[index].Name){
+                this.Sprites.splice(index,1);
+            }
+        }
     }
     //返回该图层中的精灵集合
     this.getSprites = function(){
@@ -339,6 +343,7 @@ function TitleMap(){
         CollLayer = Layer;
     }
     this.CollEvnetCheck = function(TargetXy){
+        console.log("Check:"+TargetXy)
         return CollLayer.getSprites()[TargetXy[1]][TargetXy[0]] =='space';
     }
     this.InteractiveEvnetCheck = function(TargetXy){
