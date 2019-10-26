@@ -151,7 +151,7 @@
         NPC.Move2Taget([1,0],Player.Animes[3]);
     }
     document.getElementsByTagName('button')[11].onclick = function(){
-    Player.Interactive(null,function(flag,item){
+    Player.Interactive(function(flag,item){
         console.log(flag);
         if(flag=='Success'){
             alert('你找我干什么？');

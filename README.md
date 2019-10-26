@@ -35,6 +35,25 @@ Layer                                           //图层类 数据体现的基�
 Sprite                                            //精灵类 数据表现的复合类
   
   var Player = new Sprite(BC,[0,1]);             //BC =>BlockChocolate 引擎主题类,[0,1] =>初始精灵在 坐标系里的 瓦片坐标
+      属性：
+       Animes                                          //动画集合 设置 警告：一个Sprit 必须至少需要一组动画！
+      方法：
+       Move2Taget([x,y],BcAnime)           // 播放动画BcAnime 并移动至 x，y （建议每次一格移动！） 也可以将xy设置为零 进行原地播放BcAnime动画    Player.Move2Target([0,1],RunAnime);
+
+       StopAnimePlay();                    //如果 精灵当前播放的动画IsLoop 属性为 True  动画将自动循环播放 直至调用该方法。
+          Player.StopAnimePlay();
+
+       Interactive(Callback(flag,result));      //与该精灵目前方向的下一格 交互图层上的精灵进行交互  并触发回调
+          Player.Interactive(function(flag,reslut){           //回调函数 包含两个参数 flag 触发信息 以及  被触发的 精灵 reslut;
+             if(flag=='Success'){               //如果触发信息时 ‘Success’ 即 当前目标位置（精灵面朝方向的下一格）在交互图层上有可交互的精灵
+                 console.dir(reslut);           // 打印 被 触发的精灵 reslut              reslut 为 目标位置的精灵
+             }else{
+                 console.log(flag);
+             }
+         })
+        
+
+
 工具类：
 THE_BEST_TOOL_CLASS:                               //工具类 目前只添加了读取图片方法；
             var Tool = new THE_BEST_TOOL_CLASS('.'); //创建以"./"为父目录的读取工具类

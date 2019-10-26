@@ -200,7 +200,7 @@ function Sprite(bc,XY){
            }
         }
     }
-    this.Interactive = function(Anime,CallBack){
+    this.Interactive = function(CallBack){
         if(Bc.GetTitleMapMange().GetInteractiveLayer()==null||Bc.GetTitleMapMange().GetInteractiveLayer()==undefined){
             //如果添加 则调用回调函数 并返回 flag 为 coll 的事件  包含 目标Sprite  以及 触发Sprite   if(Bc.GetTitleMapMange().GetInteractiveLayer()==null||Bc.GetTitleMapMange().GetInteractiveLayer()==undefined){
                 console.log('[BC Engine Ver 1.0 ] Error Message: 尚未添加交互图层 请使用BlockChocolat.GetTitleMapMange().SetInteractiveLayer(Layer)添加交互图层!');
