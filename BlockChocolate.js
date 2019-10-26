@@ -51,13 +51,24 @@ function BlockChocolateEngine(Canvas,width,height){
             Timer++;
             if(TitleMapManger!=undefined){
                 for(var index= 0 ; index <TitleMapManger.getLayers().length;index++){
+                    if(TitleMapManger.getLayers()[index].IsMapBG){
+                        
                     TitleMapManger.getLayers()[index].SetCanvas(mCanvas);
                     TitleMapManger.getLayers()[index].DrawOnLayer();
+                    }
                 }
                 TitleMapManger.GetCollLayer().SetCanvas(mCanvas);
                 TitleMapManger.GetCollLayer().DrawOnLayer();
                 TitleMapManger.GetInteractiveLayer().SetCanvas(mCanvas);
                 TitleMapManger.GetInteractiveLayer().DrawOnLayer();
+                
+                for(var index= 0 ; index <TitleMapManger.getLayers().length;index++){
+                    if(!TitleMapManger.getLayers()[index].IsMapBG){
+                        
+                    TitleMapManger.getLayers()[index].SetCanvas(mCanvas);
+                    TitleMapManger.getLayers()[index].DrawOnLayer();
+                    }
+                }
             }
             if(Timer>=TimerMax){
                 Timer = 0;
@@ -125,8 +136,10 @@ function Layer(IsMapBG,bc){
     };
 }
 //精灵
-function Sprite(bc,XY){
+function Sprite(bc,XY,Name,data){
     var IsColl;
+    this.Name = Name;
+    this.data =data ;
     this.Animes;
     this.Direction = [0,-1];
     this.PIc ;
@@ -179,7 +192,7 @@ function Sprite(bc,XY){
     //对精灵 主动移动做出判断 并修改其AnimeX 和 AnimeY 在播放完其CurrentAnime 时 
     //会对 精灵的  TitleX TitleY 进行修改  完成一次完整的主动移动！
     //碰撞 检测也在 该方法内
-    this.Move2Taget = function(Target,Anime){
+    this.Move2Target = function(Target,Anime){
         //检测 目标坐标是否为空(不为空 说明当前仍在移动 继续执行移动操作会导致不可预测的错误)
         if(this.Target ==undefined){
             // 检测方法 检测 对象的目标坐标是否为障碍物;
@@ -236,7 +249,6 @@ function Sprite(bc,XY){
                         if(this.PlayAnime(this.Target)){
                             if(this.Target[0]!=0||this.Target[1]!=0){
                                 this.Direction = this.Target;
-                                console.log('Change Direction:'+this.Direction);
                             }
                             this.PIc =  this.CurrentAnime.imgs[0];
                             this.AnimeX = 0;
@@ -369,6 +381,7 @@ function THE_BEST_TOOL_CLASS(path){
         image.src = path+'/'+name;
         return image;
     }
+    
 }
 
 //    -4
@@ -447,6 +460,17 @@ function DrawSprite(Camera,Sprite,canvas,img){
         img.width*ratio+(Camera.TitleFormatWidth-img.width*ratio)/2,//将截取尺寸按比例缩小
         img.height*ratio//将截取尺寸按比例缩小
         );
+        
+        var width = canvas.getContext('2d').measureText(Sprite.Name);
+      //  mCanvas.getContext('2d').fillStyle="#FF0000";
+      //  mCanvas.getContext('2d').fillRect(20,10,width.width,50);
+      canvas.getContext('2d').font = 'normal bold  15px Arial '
+      canvas.getContext('2d').fillStyle = "#000000";
+      canvas.getContext('2d').textBaseline = 'top'
+      canvas.getContext('2d').fillText(Sprite.Name, (((Camera.TitileWidth-1)/2)+(Sprite.TitleX-Camera.GetMainCamera().getMainSprite().TitleX))*Camera.TitleFormatWidth-(
+            Camera.GetMainCamera().getMainSprite().AnimeX-Sprite.AnimeX)*Camera.TitleFormatWidth +(Camera.TitleFormatWidth/2-width.width/2), (((Camera.TitleHeight-1)/2)+(Sprite.TitleY-Camera.GetMainCamera().getMainSprite().TitleY))*Camera.TitleFormatHeight-
+            (Camera.GetMainCamera().getMainSprite().AnimeY-Sprite.AnimeY)*Camera.TitleFormatHeight-15);
+        
   //  }
 }
 function Event(flag,target,origin){
