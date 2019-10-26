@@ -1,4 +1,7 @@
-# BlockChocolate
+# BlockChocolate 作者:Mead
+随笔写的 绘图引擎         写了点事件处理 可以用作游戏引擎 针对性蛮强的 耦合过高  适合做类似于口袋妖怪这种风格的游戏 我一开始也是以复刻口袋妖怪为目的写的这个引擎   名字也是根据特点起的 BlockChocolate ：方格巧克力；
+
+
 引擎类：
 BlockChocolateEngine                               //BlockChocolate 方块巧克力 引擎本体
  
@@ -68,8 +71,8 @@ TitleMap                                            //瓦片地图 管理类   �
 TITLEIMAGE                                           //基础瓦片图片类 作为瓦片类的数据补充
    
    var TITLEIMG = new TITLEIMAGE(Tool.getImg('TITLE.png'),0,0,32,32);          
-   //Tool.getImg('TITLE.png');通过工具类获得'TITLE.png'图片数据
-   //0,0,32,32 从'TITLE.png'图片上截取 以左上角 0,0 为起点  右下角32,32为终点的矩形；
+     //Tool.getImg('TITLE.png');通过工具类获得'TITLE.png'图片数据
+      //0,0,32,32 从'TITLE.png'图片上截取 以左上角 0,0 为起点  右下角32,32为终点的矩形；
 
 
 TITLE                                                //瓦片类 作为地图的基础数据信息单位被创建;
@@ -77,7 +80,7 @@ TITLE                                                //瓦片类 作为地图的
     var TITLE = new TITLE('0x01',TITLEIMG);
      //'0x01'         为作为瓦片标识          当绘制地图工具读取到地图数组中的0x01会将该瓦片绘制在地图数组位置上
      // TITLEIMG => TITLEIMAGE               保存截取信息以及原图片信息的对象TITLEIMAGE
-     
+
 工具类：
 THE_BEST_TOOL_CLASS:                               //工具类 目前只添加了读取图片方法；
 
