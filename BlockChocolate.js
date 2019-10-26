@@ -343,7 +343,6 @@ function TitleMap(){
         CollLayer = Layer;
     }
     this.CollEvnetCheck = function(TargetXy){
-        console.log("Check:"+TargetXy)
         return CollLayer.getSprites()[TargetXy[1]][TargetXy[0]] =='space';
     }
     this.InteractiveEvnetCheck = function(TargetXy){
