@@ -71,8 +71,8 @@ TitleMap                                            //瓦片地图 管理类   �
 TITLEIMAGE                                           //基础瓦片图片类 作为瓦片类的数据补充
    
    var TITLEIMG = new TITLEIMAGE(Tool.getImg('TITLE.png'),0,0,32,32);          
-     //Tool.getImg('TITLE.png');通过工具类获得'TITLE.png'图片数据
-      //0,0,32,32 从'TITLE.png'图片上截取 以左上角 0,0 为起点  右下角32,32为终点的矩形；
+       //Tool.getImg('TITLE.png');通过工具类获得'TITLE.png'图片数据
+       //0,0,32,32 从'TITLE.png'图片上截取 以左上角 0,0 为起点  右下角32,32为终点的矩形；
 
 
 TITLE                                                //瓦片类 作为地图的基础数据信息单位被创建;
