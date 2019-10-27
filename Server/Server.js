@@ -18,16 +18,20 @@ wss.on('connection', function connection(ws,req) {
                     });
                     OnlinePlayers.push(player);
                   break;
-              case 'MOVE':
-                    wss.clients.forEach(function (client) {
-                        client.send('{"ACTION":"MOVED","NAME":"'+json.NAME+'","X":"'+json.X+'","Y":"'+json.Y+'"}');
-                        OnlinePlayers.forEach(function(player){
-                            if(player.NAME == json.NAME){
-                                player.x+=parseInt(json.X);
-                                player.y +=parseInt(json.Y);
-                            }
-                        })
-                    });
+              case 'MOVE'://14
+                console.log("Player Move!");
+                OnlinePlayers.forEach(function (Player){
+                    if(Player.NAME == json.NAME){
+                        Player.x += parseInt(json.X);
+                        Player.y +=parseInt( json.Y);
+                        wss.clients.forEach(function (client) {
+                            client.send('{"ACTION":"MOVED","NAME":"'+Player.NAME+'","X":"'+Player.x+'","Y":"'+Player.y+'"}');
+                           
+                        });
+                    }
+                    console.log(Player.NAME+":",Player.x,Player.y);
+                })
+                    break;
           }
       }catch{
           console.log("Cant Parse Json:"+message);
@@ -46,12 +50,12 @@ wss.on('connection', function connection(ws,req) {
         }
     }
     })
-  });
+  })
 
 
 function Player(Name,Path){
-    this.x= 0;
-    this.y= 1;
+    this.x = 6;
+    this.y= 0;
     this.NAME = Name;
     this.Path = Path;
 }

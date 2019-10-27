@@ -39,80 +39,24 @@
     BC.setMainCamera(MainCamera);
     window.addEventListener('load',function(){
     BC.Start();
-    var curanime = 0;
-    window.onkeydown = function(data){
-        if(curanime!=data.keyCode){
-            curanime = data.keyCode;
-         MainCamera.getMainSprite().StopAnimePlay();
-        }
-        switch(data.keyCode){
-            case 65:
+    window.onkeypress = function(data){
+        switch(data.code){
+            case 'KeyA':
             MainCamera.getMainSprite().Move2Target([-1,0],2);
-            ws.send('{"ACTION":"MOVE","NAME":"'+Name+'","X":"'+-1+'","Y":"'+0+'"}');
                 break;
-            case 87:
+            case 'KeyW':
             MainCamera.getMainSprite().Move2Target([0,-1],1);
-            console.log("CALL VOID: ",[0,-1],1);
-            ws.send('{"ACTION":"MOVE","NAME":"'+Name+'","X":"'+0+'","Y":"'+-1+'"}');
                 break;
-             case 68:
+             case 'KeyD':
              MainCamera.getMainSprite().Move2Target([1,0],3);
-            ws.send('{"ACTION":"MOVE","NAME":"'+Name+'","X":"'+1+'","Y":"'+0+'"}');
                 break;
-            case 83:
-            console.log("CALL VOID: ",[0,1],0);
+            case 'KeyS':
                  MainCamera.getMainSprite().Move2Target([0,1],0);
-            ws.send('{"ACTION":"MOVE","NAME":"'+Name+'","X":"'+0+'","Y":"'+1+'"}');
-                 break;
+                break;
         }
     }
-    window.onkeyup = function(){
-         MainCamera.getMainSprite().StopAnimePlay();
-    }
-    
-     ws = new WebSocket('ws:localhost:8080');
-     
-        ws.onopen = function(){
-            console.log("连接成功!");
-            var json = '{"ACTION":"JOIN","NAME":"'+Name+'"}';
-            ws.send(json);
-        }
-        ws.onmessage = function(data){
-            var DATA = JSON.parse(data.data);
-            if(DATA.ACTION=='JOINED'){
-                if(DATA.NAME!=Name){
-                    
-                var newPlayer = new Sprite(BC,[0,1],DATA.NAME);
-                newPlayer.Animes =classAnime;
-                 SpriteLayer.addSprite(newPlayer);
-                 console.log("添加新玩家["+DATA.NAME+"]");
-                }
-            }
-            else if(DATA.ACTION=="ONLINEPLAYER"){
-                var newPlayer = new Sprite(BC,[parseInt(DATA.X),parseInt(DATA.Y)],DATA.NAME);
-                newPlayer.Animes =classAnime;
-                 SpriteLayer.addSprite(newPlayer);
-                 console.log("添加在线玩家["+DATA.NAME+"]");
-            }
-            else if(DATA.ACTION=="MOVED"){
-                SpriteLayer.getSprites().forEach(element => {
-                    if(element.Name==DATA.NAME){
-                        element.Move2Target([parseInt(DATA.X),parseInt(DATA.Y)],Player.Animes[3]);
-                        element.StopAnimePlay();
-                    }
-                });
-            }
-            else if(DATA.ACTION=="EXIT"){
-                SpriteLayer.getSprites().forEach(element => {
-                    if(element.Name==DATA.NAME){
-                console.log('EXIT',DATA);
-                        SpriteLayer.DelSprite(element);
-                    }
-                });
-            }
-        }
-    })
-    var ws;
+});
+
     </script>
 </body>
 </html>

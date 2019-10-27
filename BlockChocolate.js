@@ -3,7 +3,7 @@
 
 var TitleWalkMax = 3;
 var Timer = 0;
-var TimerMax = 60;
+var TimerMax = 30;
 var FPS = 144;
 
 //引擎
@@ -45,6 +45,7 @@ function BlockChocolateEngine(Canvas,width,height){
             console.log('[BC Engine Ver 1.0 ] Error Message: 引擎至少需要一个Camera  作为 主视角！');
         }else{
         ThreadId = setInterval( function(){
+            var start = new Date();
             mCanvas.getContext('2d').fillStyle="#FFFFFF";
             mCanvas.getContext('2d').fillRect(0,0,mCanvas.width,mCanvas.height);
             Timer++;
@@ -75,6 +76,7 @@ function BlockChocolateEngine(Canvas,width,height){
             if(Timer>=TimerMax){
                 Timer = 0;
             }
+            mCanvas.getContext('2d').fillText("FPS:"+parseInt((1000/(new Date()-start))),0,0);
         },1000/FPS);
         }
     };
@@ -200,7 +202,6 @@ function Sprite(bc,XY,Name,data){
     this.Move2Target = function(Target,animedata){
         //检测 目标坐标是否为空(不为空 说明当前仍在移动 继续执行移动操作会导致不可预测的错误)
         if(this.Target ==undefined&&animedata!=undefined){
-            console.log("GETDATA:",Target,animedata);
             // 检测方法 检测 对象的目标坐标是否为障碍物;
           if(Bc.GetTitleMapMange().CollEvnetCheck([this.TitleX+Target[0],this.TitleY+Target[1]])){
               //如果目标坐标不是障碍物 则将坐标设置为该精灵的移动目标坐标
@@ -208,7 +209,6 @@ function Sprite(bc,XY,Name,data){
               //并将该精灵的当前动画设置为 参数动画
               this.SetAnime(animedata);
               DebugOnce = false;
-              console.log("可以移动！："+animedata);
            }else{
                //检测 引擎是否添加 时间回调函数
             if(Bc.EventCallBack!=null||Bc.EventCallBack!=undefined){
@@ -216,7 +216,7 @@ function Sprite(bc,XY,Name,data){
                 this.Target = [0,0];
                 this.SetAnime(animedata);
                  Bc.EventCallBack(Event('Coll',Bc.GetTitleMapMange().GetCollLayer().getSprites()[Bc.GetTitleMapMange().GetCollLayer().getSprites()[1][0]*(this.TitleY+Target[1])+this.TitleX+2+Target[0]],this));
-                 console.log("Cant Move");
+            
             }
            }
         }
@@ -263,6 +263,8 @@ function Sprite(bc,XY,Name,data){
                             this.AnimeY = 0;
                             this.TitleX += this.Target[0];
                             this.TitleY += this.Target[1];
+                            var x = this.Target[0];
+                            var y = this.Target[1];
                             Bc.GetMainCamera().LeftTitleX+=this.Target[0];
                             Bc.GetMainCamera().TopTitleY+=this.Target[1];
                             if(this.Animes.IsLoop){
