@@ -11,86 +11,30 @@
     <script src="BlockChocolate.js"></script>
     <script>
         var Name = prompt("输入昵称:");
-        var Tool = new THE_BEST_TOOL_CLASS('.');
-        var DemoPng = Tool.getImg('Demo.png');// 需要联网获取
+        var Tool = new THE_BEST_TOOL_CLASS('http://192.168.47.254');
+        var DemoPng = Tool.getImg('ImgBg/Demo.png');// 需要联网获取
         var Floor = Tool.getImg('ImgBg/auto11.png');// 需要联网获取
         var Flower = Tool.getImg('ImgBg/flower14bq.png');// 需要联网获取
-        var classAnime = [new BCAnime([
-             new TITLEIMAGE(DemoPng,0,0,73,106),
-             new TITLEIMAGE(DemoPng,0,116,73,100),
-             new TITLEIMAGE(DemoPng,0,222,73,100),
-             new TITLEIMAGE(DemoPng,0,328,73,100),
-             new TITLEIMAGE(DemoPng,0,434,73,95),
-             new TITLEIMAGE(DemoPng,0,530,73,100)],
-             true,'down'),new BCAnime([
-             new TITLEIMAGE(DemoPng,74,0,73,108),
-             new TITLEIMAGE(DemoPng,74,108,73,108),
-             new TITLEIMAGE(DemoPng,74,217,73,108),
-             new TITLEIMAGE(DemoPng,74,320,73,108),
-             new TITLEIMAGE(DemoPng,74,428,73,108),
-             new TITLEIMAGE(DemoPng,74,533,73,108)],
-             true,'up'),new BCAnime([
-             new TITLEIMAGE(DemoPng,152,0,73,108),
-             new TITLEIMAGE(DemoPng,152,108,73,108),
-             new TITLEIMAGE(DemoPng,152,217,73,108),
-             new TITLEIMAGE(DemoPng,152,320,73,108),
-             new TITLEIMAGE(DemoPng,152,428,73,108),
-             new TITLEIMAGE(DemoPng,152,533,73,108)],
-             true,'left'),new BCAnime([
-             new TITLEIMAGE(DemoPng,228,0,73,108),
-             new TITLEIMAGE(DemoPng,228,108,73,108),
-             new TITLEIMAGE(DemoPng,228,217,73,108),
-             new TITLEIMAGE(DemoPng,228,320,73,108),
-             new TITLEIMAGE(DemoPng,228,428,73,108),
-             new TITLEIMAGE(DemoPng,228,533,73,108)],
-             true,'right')];
+        var animeTitle =new TITLEIMAGE(DemoPng,73,106,4,"Anime");
+        var classAnime = new BCAnime(animeTitle,false);
+      
     var BC = new BlockChocolateEngine(document.getElementsByTagName('canvas')[0],20,10);
     BC.addEventListener(function(event){
         console.log(event);
     });
+    
     var MainCamera = new Camera(BC);
     var SpriteLayer = new Layer(false,BC);
-    var Map = new Layer(true,BC);
     var InteractiveLayer = new Layer(false,BC);
-    var Player = new Sprite(BC,[0,1],Name);
+    var Player = new Sprite(BC,[6,0],Name);
     Player.Animes =classAnime;
     var TitleMap = new TitleMap();
-    var TITLE2 = new TITLE('0x02',new TITLEIMAGE(Flower,32,32));
-    var TITLE = new TITLE('0x01',new TITLEIMAGE(Floor,32,32));
-    //地板背景图层
-    var MapData = new Array();// 需要联网获取
-    for(var i = 0; i<BC.TitleHeight;i++){
-        var maprow = new Array();
-        for(var o = 0;o<BC.TitileWidth;o++){
-            maprow.push('0x01');
-        }
-        MapData.push(maprow);
-    }
-    Map.SetMapData(MapData);
-    //碰撞图层
-    var Coll = new Layer(true,BC);
-    var CollMap = new Array();// 需要联网获取
-    for(var i = 0; i<BC.TitleHeight;i++){
-        var maprow = new Array();
-        for(var o = 0;o<BC.TitileWidth;o++){
-            if(i==0){
-            maprow.push('0x02');
-            }else{
-            maprow.push('space');
-            }
-        }
-        CollMap.push(maprow);
-    }
-    Coll.SetMapData(CollMap);
+    Tool.ReadXMLGetLayers('Room1.tmx',TitleMap);
+    
 
     SpriteLayer.addSprite(Player);
     MainCamera.setMainSprite(Player);
-    TitleMap.AddNewTITLE(TITLE);
-    TitleMap.AddNewTITLE(TITLE2);
-    TitleMap.AddNewLayer(Map);
     TitleMap.AddNewLayer(SpriteLayer);
-    TitleMap.InteractiveLayerAdd(InteractiveLayer);
-    TitleMap.CollLayerAdd(Coll);
     BC.SetTitleMapMange(TitleMap);
     BC.setMainCamera(MainCamera);
     window.addEventListener('load',function(){
@@ -100,23 +44,24 @@
         if(curanime!=data.keyCode){
             curanime = data.keyCode;
          MainCamera.getMainSprite().StopAnimePlay();
-         console.log('Change Anime');
         }
         switch(data.keyCode){
             case 65:
-            MainCamera.getMainSprite().Move2Target([-1,0],Player.Animes[2]);
+            MainCamera.getMainSprite().Move2Target([-1,0],2);
             ws.send('{"ACTION":"MOVE","NAME":"'+Name+'","X":"'+-1+'","Y":"'+0+'"}');
                 break;
             case 87:
-            MainCamera.getMainSprite().Move2Target([0,-1],Player.Animes[1]);
+            MainCamera.getMainSprite().Move2Target([0,-1],1);
+            console.log("CALL VOID: ",[0,-1],1);
             ws.send('{"ACTION":"MOVE","NAME":"'+Name+'","X":"'+0+'","Y":"'+-1+'"}');
                 break;
              case 68:
-             MainCamera.getMainSprite().Move2Target([1,0],Player.Animes[3]);
+             MainCamera.getMainSprite().Move2Target([1,0],3);
             ws.send('{"ACTION":"MOVE","NAME":"'+Name+'","X":"'+1+'","Y":"'+0+'"}');
                 break;
             case 83:
-                 MainCamera.getMainSprite().Move2Target([0,1],Player.Animes[0]);
+            console.log("CALL VOID: ",[0,1],0);
+                 MainCamera.getMainSprite().Move2Target([0,1],0);
             ws.send('{"ACTION":"MOVE","NAME":"'+Name+'","X":"'+0+'","Y":"'+1+'"}');
                  break;
         }
@@ -144,7 +89,6 @@
                 }
             }
             else if(DATA.ACTION=="ONLINEPLAYER"){
-                console.log(DATA);
                 var newPlayer = new Sprite(BC,[parseInt(DATA.X),parseInt(DATA.Y)],DATA.NAME);
                 newPlayer.Animes =classAnime;
                  SpriteLayer.addSprite(newPlayer);
@@ -153,8 +97,6 @@
             else if(DATA.ACTION=="MOVED"){
                 SpriteLayer.getSprites().forEach(element => {
                     if(element.Name==DATA.NAME){
-                        console.log(DATA.NAME,[parseInt(DATA.X),parseInt(DATA.Y)]);
-                        console.log(DATA);
                         element.Move2Target([parseInt(DATA.X),parseInt(DATA.Y)],Player.Animes[3]);
                         element.StopAnimePlay();
                     }
