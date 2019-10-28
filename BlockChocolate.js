@@ -3,8 +3,8 @@
 
 var TitleWalkMax = 3;
 var Timer = 0;
-var TimerMax = 30;
-var FPS = 144;
+var TimerMax = 60;
+var FPS = 60;
 
 //引擎
 function BlockChocolateEngine(Canvas,width,height){
@@ -99,6 +99,7 @@ function Layer(IsMapBG,bc,TITLE){
     this.SetCanvas = function(canvas){
         this.mcanvas = canvas;
     }
+    var DebugOnce = true;
     //绘制图层 （引擎内部自动调用）
     this.DrawOnLayer = function(){
         if(!this.IsMapBG){
@@ -107,8 +108,18 @@ function Layer(IsMapBG,bc,TITLE){
         }
     }else{
             for(var sprite_index  = 2 ; sprite_index<this.Sprites.length;sprite_index++){
+                var SpritePostion = [(sprite_index-2)%this.Sprites[1][0],Math.floor((sprite_index-2)/this.Sprites[1][0])];
+                
+                if(SpritePostion[0]<Bc.GetMainCamera().LeftTitleX+Bc.TitileWidth&&
+                SpritePostion[0]>Bc.GetMainCamera().LeftTitleX-Bc.TitileWidth&&
+                SpritePostion[1]<Bc.GetMainCamera().TopTitleY+Bc.TitleHeight&&
+                SpritePostion[1]>Bc.GetMainCamera().TopTitleY-Bc.TitleHeight
+                ){
                DrawMap(Bc,[parseInt((sprite_index-2)%this.Sprites[1][0]),parseInt((sprite_index-2)/this.Sprites[1][0])],this.mcanvas,this.Title,this.Sprites[sprite_index]);
-            }
+           
+                }
+             }
+             DebugOnce = false;
             }
         mcanvas = undefined;
     }
@@ -142,7 +153,6 @@ function Layer(IsMapBG,bc,TITLE){
 }
 //精灵
 function Sprite(bc,XY,Name,data){
-    var IsColl;
     this.Name = Name;
     this.data =data ;
     this.Direction = [0,-1];
@@ -155,7 +165,6 @@ function Sprite(bc,XY,Name,data){
     this.Animes;
     this.Layer ;
     this.Target = undefined;
-    //this.RealMove = false;
     this.StopAnime= false;
     this.CurrentAnime = undefined;
     //设置当前 精灵的 当前动画
@@ -163,11 +172,6 @@ function Sprite(bc,XY,Name,data){
         if(this.target==undefined){
         this.CurrentAnime = Anime;
         this.Animes.AnimeStep = 0;
-        console.log("重新播放动画");
-        console.log("Anime:"+this.CurrentAnime);
-        if(this.CurrentAnime !=Anime&&this.CurrentAnime!=undefined){
-        this.Animes.AnimeStep = 0;
-        }
         }
         
     }
@@ -178,8 +182,8 @@ function Sprite(bc,XY,Name,data){
     //播放 当前精灵的  当前动画
     this.PlayAnime= function(target){
             
-         this.AnimeX= parseFloat(this.Animes.AnimeStep/(TimerMax*target[0]));
-         this.AnimeY= this.Animes.AnimeStep/(TimerMax*target[1]);
+         this.AnimeX= (this.Animes.AnimeStep/TimerMax)*target[0];
+         this.AnimeY= (this.Animes.AnimeStep/TimerMax)*target[1];
          if(target[0]==0){
              this.AnimeX = 0;
          }
@@ -208,7 +212,6 @@ function Sprite(bc,XY,Name,data){
               this.Target = Target;
               //并将该精灵的当前动画设置为 参数动画
               this.SetAnime(animedata);
-              DebugOnce = false;
            }else{
                //检测 引擎是否添加 时间回调函数
             if(Bc.EventCallBack!=null||Bc.EventCallBack!=undefined){
@@ -263,15 +266,15 @@ function Sprite(bc,XY,Name,data){
                             this.AnimeY = 0;
                             this.TitleX += this.Target[0];
                             this.TitleY += this.Target[1];
-                            var x = this.Target[0];
-                            var y = this.Target[1];
                             Bc.GetMainCamera().LeftTitleX+=this.Target[0];
                             Bc.GetMainCamera().TopTitleY+=this.Target[1];
                             if(this.Animes.IsLoop){
-                                if(this.StopAnime){
-                            this.CurrentAnime = undefined;
-                            this.Target = undefined;
-                            this.StopAnime = false;
+                                var nextanime = this.CurrentAnime;
+                                var nextTarget = [this.Target[0],this.Target[1]];
+                                this.CurrentAnime = undefined;
+                                this.Target = undefined;
+                                if(!this.StopAnime){
+                                    this.Move2Target(nextTarget,nextanime);
                                 }
                             }else{
                                 this.CurrentAnime = undefined;
