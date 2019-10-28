@@ -37,7 +37,7 @@ Layer                                           //图层类 数据体现的基�
                      Layer.setMapData(Data);          //Data =>精灵数组 或者二位 String地图数据数组 地图数据中无需渲染的空位使用'space'占位;                                
 Sprite                                            //精灵类 数据表现的复合类
   
-     var Player = new Sprite(BC,[0,1]);             //BC =>BlockChocolate 引擎主题类,[0,1] =>初始精灵在 坐标系里的 瓦片坐标
+     var Player = new Sprite(BC,[0,1],Name);             //BC =>BlockChocolate 引擎主题类,[0,1] =>初始精灵在 坐标系里的 瓦片坐标 ,Name 精灵头顶的文字
     属性：
                 Animes                                          //动画集合 设置 警告：一个Sprit 必须至少需要一组动画！
     方法：
@@ -70,15 +70,10 @@ TitleMap                                            //瓦片地图 管理类   �
 
 TITLEIMAGE                                           //基础瓦片图片类 作为瓦片类的数据补充
    
-   var TITLEIMG = new TITLEIMAGE(Tool.getImg('TITLE.png'),0,0,32,32);          
-       //Tool.getImg('TITLE.png');通过工具类获得'TITLE.png'图片数据;
-       //0,0,32,32 从'TITLE.png'图片上截取 以左上角 0,0 为起点  右下角32,32为终点的矩形；
+   var TITLEIMG = new TITLEIMAGE(DemoPng,73,106,4,"Anime")          
+       //DemoPng 通过工具类获得 图片数据;
+       //73,106为单独一帧在原图片的上宽高 4 为 一共几列  一列为一组动画
 
-TITLE                                                //瓦片类 作为地图的基础数据信息单位被创建;
- 
-    var TITLE = new TITLE('0x01',TITLEIMG);
-     //'0x01'         为作为瓦片标识          当绘制地图工具读取到地图数组中的0x01会将该瓦片绘制在地图数组位置上
-     // TITLEIMG => TITLEIMAGE               保存截取信息以及原图片信息的对象TITLEIMAGE
 
 工具类：
 THE_BEST_TOOL_CLASS:                               //工具类 目前只添加了读取图片方法；
@@ -87,3 +82,4 @@ THE_BEST_TOOL_CLASS:                               //工具类 目前只添加�
     方法:
         getImg(path)                              //从父级目录读取图片;   path=>String;     
             Tool.getImg('Demo.png');                 //从父目录中读取'Demo.png'作为Image返回;     
+        ReadXMLGetLayers(PATH,TITILEMAP)          //从指定路径的tmx文件读取信息并格式化为图层对象存入TITLEMAP图层管理器中 默认最后一个图层（TITLEMAPEDITER中最上层图层为碰撞图层）;
